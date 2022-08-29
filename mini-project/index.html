@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        body {
+            background: azure;
+            margin: 0;
+            padding: 10px;
+        }
+
+        .mainContainer {
+            border: black 2px solid;
+            border-radius: 10px;
+            padding: 10px;
+        }
+
+        .userDiv {
+            background: lightyellow;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+
+        .userDetailsBtn {
+            padding: 10px 40px;
+            border-radius: 10px;
+            border: none;
+            background: lightskyblue;
+            font-size: large;
+            font-weight: bold;
+        }
+
+        .userDetailsBtn:hover {
+            background: darkblue;
+            color: whitesmoke;
+        }
+    </style>
+</head>
+<body>
+<!--В index.html-->
+<!--1 отримати масив об'єктів з endpoint`а https://jsonplaceholder.typicode.com/users-->
+<!--2 Вивести id,name всіх user в index.html. Окремий блок для кожного user.-->
+<!--3 Додати кожному блоку кнопку/посилання , при кліку на яку відбувається перехід  на сторінку user-details.html, котра має детальну інфорацію про об'єкт на який клікнули-->
+
+<!--Стилизація проєкта - -->
+<!--index.html - всі блоки з user - по 2 в рядок. кнопки/аосилвння розташувати під інформацією про user.-->
+<!--user-details.html - блок з інфою про user зверху сторінки. Кнопка нижчє, на 90% ширини сторінки, по центру.-->
+<!--блоки з короткою іфною про post - в ряд по 5 .-->
+<!--post-details.html - блок з інфою про пост зверху. Коментарі - по 4 в ряд.-->
+<!--Всі елементи котрі характеризують users, posts, comments візуалізувати, так, щоб було видно що це блоки (дати фон. марджини і тд)-->
+
+<script>
+    let mainContainer = document.createElement('div');
+    mainContainer.classList.add('mainContainer');
+    document.body.appendChild(mainContainer);
+
+    fetch('https://jsonplaceholder.typicode.com/users')
+        .then(response => response.json())
+        .then(usersArray => {
+            for (const user of usersArray) {
+                let userDiv = document.createElement('div');
+                userDiv.classList.add('userDiv');
+
+                let userIdName = document.createElement('h2');
+                userIdName.innerText = `${user.id} - ${user.name}`
+
+                let userDetailsBtn = document.createElement('button');
+                userDetailsBtn.innerText = 'Details';
+                userDetailsBtn.classList.add('userDetailsBtn');
+
+                userDetailsBtn.onclick = () => {
+                    history.pushState(`${user.id}`, 'userId');
+                    location.href = `user-details.html?Id=${user.id}`
+                }
+
+                mainContainer.appendChild(userDiv);
+                userDiv.append(userIdName, userDetailsBtn);
+            }
+        })
+
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Post Details</title>
+    <style>
+        body {
+            margin: 0;
+        }
+
+        .postContainer {
+            background: lightyellow;
+            padding: 10px;
+        }
+
+        .postInfoBox {
+            border: black 2px solid;
+            border-radius: 10px;
+            padding: 10px;
+        }
+
+        .btnBack {
+            border: none;
+            border-radius: 10px;
+            width: 120px;
+            height: 40px;
+            margin: 0 10px;
+            background: greenyellow;
+        }
+
+        .btnBack:hover {
+            background: green;
+            color: whitesmoke;
+        }
+
+        .commentContainer {
+            background: darkseagreen;
+            border-radius: 10px;
+            margin: 10px;
+            padding: 10px 30px;
+        }
+
+        .commentsBox {
+            background: lightyellow;
+            padding: 10px 30px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+
+    </style>
+</head>
+<body>
+<!--На странице post-details.html:-->
+<!--7 Вивести всю, без виключення, інформацію про об'єкт post на який клікнули .-->
+<!--8 Нижчє інформаці про пост, вивести всі коментарі поточного поста (ендпоінт  - https://jsonplaceholder.typicode.com/posts/POST_ID/comments)-->
+
+<script>
+    let postContainer = document.createElement('div');
+    postContainer.classList.add('postContainer');
+
+    let postId = location.search.split('=')[1];
+
+    let postInfoBox = document.createElement('div');
+    postInfoBox.classList.add('postInfoBox');
+
+    let commentContainer = document.createElement('div');
+    commentContainer.classList.add('commentContainer');
+
+    document.body.appendChild(postContainer);
+    postContainer.append(postInfoBox, commentContainer);
+
+    fetch(`https://jsonplaceholder.typicode.com/posts/${postId}`)
+        .then(response => response.json())
+        .then(post => {
+            let idLine = document.createElement('h4');
+            idLine.innerText = `User ID - ${post.userId}, Post ID - ${post.id}`;
+            let postTitle = document.createElement('h1');
+            postTitle.innerText = `${post.title}`;
+            let postBody = document.createElement('h3');
+            postBody.innerText = `${post.body}`;
+            let btnBack = document.createElement('button');
+            btnBack.classList.add('btnBack');
+            btnBack.innerText = 'Back to posts';
+
+            btnBack.onclick = () => {
+                history.back()
+            }
+
+            postInfoBox.append(idLine, postTitle, postBody, btnBack)
+        })
+
+    fetch(`https://jsonplaceholder.typicode.com/posts/${postId}/comments`)
+        .then(response => response.json())
+        .then(commentsArray => {
+            for (const comment of commentsArray) {
+                let commentsBox = document.createElement('div');
+                commentsBox.classList.add('commentsBox');
+                let commentName = document.createElement('h2');
+                commentName.innerText = `${comment.name}`;
+                let commentEmail = document.createElement('h3');
+                commentEmail.innerText = `(${comment.email})`;
+                let commentBody = document.createElement('p');
+                commentBody.innerText = `${comment.body}`;
+
+                commentContainer.appendChild(commentsBox);
+                commentsBox.append(commentName, commentEmail, commentBody)
+            }
+        })
+
+
+</script>
+
+</body>
+</html>
